@@ -1,0 +1,26 @@
+[Unit]
+Description={{ config.project_name }} Gunicorn Daemon
+Wants=rabbitmq-server.service
+After=network.target
+PartOf={{ config.project_name }}.target
+
+[Service]
+User={{ config.user }}
+Group={{ config.user }}
+PIDFile={{ config.project_dir }}/pid/gunicorn.pid
+SyslogIdentifier={{ config.project_name }}_gunicorn
+Environment=DJANGO_SETTINGS_MODULE={{ config.settings_module }}
+WorkingDirectory={{ config.project_dir }}
+ExecStart={{ config.workon_home }}/{{ config.project_name }}/bin/gunicorn \
+    --pid "{{ config.project_dir }}/pid/gunicorn.pid" \
+    --pythonpath "{{ config.project_dir }}" --bind "127.0.0.1:{{ config.guni_port }}" \
+    --workers "{{ config.guni_workers }}" --max-requests "{{ config.guni_max_requests }}" --threads "{{ config.guni_threads }}" \
+    --worker-class "sync" --log-level "debug" \
+    config.wsgi:application
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+RequiredBy={{ config.project_name }}.target

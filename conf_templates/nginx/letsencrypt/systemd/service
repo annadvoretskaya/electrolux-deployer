@@ -1,0 +1,13 @@
+[Unit]
+Description=LetsEncrypt Certificates Updater
+Requires=nginx.service
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart={{ config.LETSENCRYPT_DIR }}/certbot-auto renew --quiet --no-self-upgrade
+ExecStartPost=chmod -R 755 /etc/letsencrypt/archive /etc/letsencrypt/live
+ExecStartPost=systemctl restart nginx
+
+[Install]
+WantedBy=multi-user.target

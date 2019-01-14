@@ -1,0 +1,35 @@
+{
+  "user": "ubuntu",
+  "host": "52.62.222.10",
+  "key_filename": "radaro-integrations-server.pem",
+
+  "project_name": "electrolux_integration",
+
+  "repository": "https://bitbucket.org/razortheory/electrolux-integration",
+  "branch": "master",
+
+  "settings_module": "config.settings.prod",
+
+  "server_domains": [
+    "electrolux.radaro.com.au"
+  ],
+  "letsencrypt_cert_email": "gleb@razortheory.com",
+
+  "guni_workers": 1,
+  "guni_max_requests": 0,
+  "guni_threads": 2,
+  "guni_port": 8007,
+
+  "celery_workers": 2,
+
+  "env_template": "config/settings/base_env",
+  "env_file": "config/settings/.env",
+
+  "packages": [
+    "git",
+    "python3-pip",
+    "python3-dev",
+    "nginx",
+    "monit"
+  ]
+}

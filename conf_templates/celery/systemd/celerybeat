@@ -1,0 +1,22 @@
+[Unit]
+Description={{ config.project_name }} Celery Beat Service
+Wants=rabbitmq-server.service
+After=network.target
+After=rabbitmq-server.service
+PartOf={{ config.project_name }}.target
+
+[Service]
+User={{ config.user }}
+Group={{ config.user }}
+PIDFile={{ config.project_dir }}/pid/beat.pid
+SyslogIdentifier={{ config.project_name }}_celerybeat
+Environment=DJANGO_SETTINGS_MODULE={{ config.settings_module }}
+WorkingDirectory={{ config.project_dir }}
+ExecStart={{ config.workon_home }}/{{ config.project_name }}/bin/celery beat \
+    -A {{ config.project_name }}.taskapp --pidfile={{ config.project_dir }}/pid/beat.pid \
+    --loglevel=INFO
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy={{ config.project_name }}.target

@@ -1,0 +1,6 @@
+[Unit]
+Description={{ config.project_name }} Target
+Requires=multi-user.target
+
+[Install]
+WantedBy=multi-user.target

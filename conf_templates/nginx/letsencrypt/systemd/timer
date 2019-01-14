@@ -1,0 +1,10 @@
+[Unit]
+Description=LetsEncrypt Certificates Updater Timer
+Requires=nginx.service
+After=network.target
+
+[Timer]
+OnCalendar=weekly
+
+[Install]
+WantedBy=multi-user.target

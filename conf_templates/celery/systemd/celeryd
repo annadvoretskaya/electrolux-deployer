@@ -1,0 +1,25 @@
+[Unit]
+Description={{ config.project_name }} Celery Service
+Wants=rabbitmq-server.service
+After=network.target
+After=rabbitmq-server.service
+PartOf={{ config.project_name }}.target
+
+[Service]
+User={{ config.user }}
+Group={{ config.user }}
+PIDFile={{ config.project_dir }}/pid/celeryd.pid
+SyslogIdentifier={{ config.project_name }}_celeryd
+Environment=DJANGO_SETTINGS_MODULE={{ config.settings_module }}
+WorkingDirectory={{ config.project_dir }}
+ExecStart={{ config.workon_home }}/{{ config.project_name }}/bin/celery worker \
+    -A {{ config.project_name }}.taskapp --pidfile={{ config.project_dir }}/pid/celeryd.pid \
+    --loglevel=INFO --time-limit=300 --concurrency={{ config.celery_workers }}
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+TimeoutStopSec=1min
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy={{ config.project_name }}.target
